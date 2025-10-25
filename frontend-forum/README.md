@@ -1,36 +1,261 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Frontend Forum
 
-## Getting Started
+A modern, responsive forum application built with Next.js 15, featuring real-time discussions, user authentication, and a beautiful UI.
 
-First, run the development server:
+## 🚀 Features
+
+- **Modern UI/UX**: Beautiful design with Tailwind CSS and shadcn/ui components
+- **User Authentication**: Secure login/register with NextAuth.js
+- **Thread Management**: Create, read, update, and delete discussion threads
+- **Post System**: Reply to threads with nested comments
+- **Responsive Design**: Mobile-first approach with adaptive layouts
+- **Real-time Updates**: Optimistic updates with React Query
+- **Type Safety**: Full TypeScript implementation
+- **SEO Optimized**: Server-side rendering with Next.js
+
+## 🛠️ Tech Stack
+
+### Frontend
+
+- **Framework**: Next.js 15 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **UI Components**: shadcn/ui + Radix UI
+- **State Management**: TanStack Query (React Query)
+- **Authentication**: NextAuth.js
+- **Forms**: React Hook Form + Zod validation
+- **Icons**: Lucide React
+- **Notifications**: Sonner
+
+### Backend API
+
+- **Framework**: Express.js
+- **Database**: PostgreSQL with Prisma ORM
+- **Authentication**: JWT + bcrypt
+- **Validation**: Joi
+- **CORS**: Enabled for cross-origin requests
+
+## 📋 Prerequisites
+
+Before running this project, make sure you have:
+
+- **Node.js** (v18 or higher)
+- **npm** or **yarn** package manager
+- **PostgreSQL** database (for backend)
+- **Git** for version control
+
+## 🚀 Installation & Setup
+
+### 1. Clone the Repository
+
+```bash
+git clone <repository-url>
+cd frontend-forum
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+# or
+yarn install
+```
+
+### 3. Environment Variables
+
+Create a `.env.local` file in the root directory:
+
+```env
+# NextAuth Configuration
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your-secret-key-here
+
+# Backend API
+NEXT_PUBLIC_API_URL=http://localhost:5000/api
+
+# NextAuth Providers (if using external providers)
+# GOOGLE_CLIENT_ID=your-google-client-id
+# GOOGLE_CLIENT_SECRET=your-google-client-secret
+```
+
+### 4. Backend Setup
+
+Make sure the backend API is running. See the backend README for setup instructions.
+
+### 5. Run Development Server
 
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📁 Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+frontend-forum/
+├── app/                          # Next.js App Router
+│   ├── (auth)/                   # Authentication pages
+│   │   ├── login/
+│   │   └── register/
+│   ├── threads/                  # Thread pages
+│   │   ├── page.tsx             # Threads list
+│   │   └── [id]/                # Thread detail
+│   ├── globals.css              # Global styles
+│   ├── layout.tsx               # Root layout
+│   └── page.tsx                 # Home page
+├── components/                   # Reusable components
+│   ├── ui/                      # shadcn/ui components
+│   └── thread/                  # Thread-related components
+├── hooks/                       # Custom React hooks
+│   ├── useAuth.ts              # Authentication hooks
+│   ├── useThreads.ts           # Thread CRUD hooks
+│   └── usePosts.ts             # Post CRUD hooks
+├── lib/                         # Utility libraries
+│   ├── apiClient.ts            # Axios interceptor
+│   ├── api/                    # API functions
+│   └── validations/            # Zod schemas
+├── types/                       # TypeScript type definitions
+├── middleware.ts                # Next.js middleware
+└── tailwind.config.ts          # Tailwind configuration
+```
 
-## Learn More
+## 🔧 Available Scripts
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+# Development
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run start        # Start production server
+npm run lint         # Run ESLint
+npm run type-check   # Run TypeScript type checking
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Code Quality
+npm run format       # Format code with Prettier
+npm run test         # Run tests (if implemented)
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🎨 UI Components
 
-## Deploy on Vercel
+The application uses shadcn/ui components with custom styling:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Dialog/Modal**: For create/edit forms
+- **Dropdown Menu**: For thread actions
+- **Avatar**: User profile pictures
+- **Badge**: Thread status indicators
+- **Skeleton**: Loading states
+- **Toast**: Success/error notifications
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🔐 Authentication
+
+### Features
+
+- User registration and login
+- Session management with NextAuth.js
+- Protected routes with middleware
+- Automatic token refresh
+
+### Usage
+
+```tsx
+import { useSession } from "next-auth/react";
+
+function MyComponent() {
+  const { data: session, status } = useSession();
+
+  if (status === "loading") return <div>Loading...</div>;
+  if (!session) return <div>Please login</div>;
+
+  return <div>Welcome {session.user.name}!</div>;
+}
+```
+
+## 📡 API Integration
+
+### React Query Hooks
+
+```tsx
+// Fetch threads
+const { data: threads, isLoading } = useThreads();
+
+// Create thread
+const createThread = useCreateThread();
+createThread.mutate({ title: "Hello", content: "World" });
+
+// Update thread
+const updateThread = useUpdateThread();
+updateThread.mutate({ id: "123", data: { title: "Updated" } });
+```
+
+### Custom API Client
+
+The app uses a custom Axios client with interceptors for authentication:
+
+```typescript
+import apiClient from "@/lib/apiClient";
+
+// Automatic token attachment
+const response = await apiClient.get("/threads");
+```
+
+## 🎯 Key Features Implementation
+
+### Optimistic Updates
+
+- Instant UI feedback for better UX
+- Automatic rollback on errors
+- Cache invalidation for consistency
+
+### Error Handling
+
+- Global error boundaries
+- Toast notifications for user feedback
+- Graceful fallbacks for failed requests
+
+### Responsive Design
+
+- Mobile-first approach
+- Adaptive layouts for all screen sizes
+- Touch-friendly interactions
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Development Guidelines
+
+- Follow TypeScript strict mode
+- Use meaningful commit messages
+- Write descriptive component names
+- Maintain consistent code style
+- Add tests for new features
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- [Next.js](https://nextjs.org/) - The React framework
+- [shadcn/ui](https://ui.shadcn.com/) - Beautiful UI components
+- [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS
+- [TanStack Query](https://tanstack.com/query) - Data fetching library
+- [NextAuth.js](https://next-auth.js.org/) - Authentication library
+
+## 📞 Support
+
+If you have any questions or need help:
+
+- Create an issue on GitHub
+- Contact the development team
+- Check the documentation
+
+---
+
+**Happy coding! 🚀**
