@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    /* --- Target & Module (Paling Penting) --- */
+    "target": "ES2022", // Menggunakan target JS modern yang stabil
+    "module": "NodeNext", // Sempurna untuk ES Modules di Node.js
+    "moduleResolution": "NodeNext", // WAJIB ada jika "module" adalah "NodeNext"
+    "lib": ["ES2022"], // Sesuaikan 'lib' dengan 'target'
+
+    /* --- Lokasi File --- */
+    "rootDir": "./src", // Di mana kode .ts Anda berada
+    "outDir": "./dist", // Ke mana hasil kompilasi .js disimpan
+
+    /* --- Pengecekan Kualitas Kode (Strictness) --- */
+    "strict": true, // Mengaktifkan semua aturan pengecekan
+    "noUncheckedIndexedAccess": true, // Pengecekan ketat untuk akses array
+    "exactOptionalPropertyTypes": true, // Pengecekan ketat untuk properti opsional
+
+    /* --- Pengaturan Modul (ESM) --- */
+    "verbatimModuleSyntax": true, // Memaksa penggunaan 'import type' (best practice)
+    "isolatedModules": true, // Memastikan semua file adalah modul
+    "moduleDetection": "force", // Memperlakukan semua file sebagai modul
+
+    /* --- Lain-lain --- */
+    "sourceMap": true, // Wajib untuk debugging
+    "skipLibCheck": true, // Mempercepat kompilasi (tidak mengecek node_modules)
+    "forceConsistentCasingInFileNames": true // Mencegah error terkait casing di Git
+  },
+  "include": ["src/**/*"], // Hanya kompilasi file di dalam folder /src
+  "exclude": ["node_modules", "dist"] // Abaikan folder-folder ini
+}

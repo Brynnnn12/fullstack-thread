@@ -1,0 +1,53 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  email     String   @unique
+  password  String   // Akan kita hash
+  createdAt DateTime @default(now())
+
+  // Relasi: User bisa punya banyak Thread dan Post
+  threads Thread[]
+  posts   Post[]
+}
+
+model Thread {
+  id        String   @id @default(uuid())
+  title     String
+  content   String   // Postingan utama/pembuka
+  createdAt DateTime @default(now())
+
+  // Relasi ke User (Pembuat Thread)
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Relasi: Thread punya banyak balasan (Post)
+  posts Post[]
+}
+
+model Post {
+  id        String   @id @default(uuid())
+  content   String   // Isi balasan
+  createdAt DateTime @default(now())
+
+  // Relasi ke User (Pembuat Post/balasan)
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Relasi ke Thread (Post ini ada di thread mana)
+  threadId String
+  thread   Thread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+}
